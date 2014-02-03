@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="lastfm_test_tag_freq_1000.json"></script>
+  
+  <script type="text/javascript">
+  function init() {
+	  /*
+	  $.ajax( { 
+		  async: false, 
+			global: false, 
+			url: "../data/lastfm_test_tag_freq_1000.json", 
+			dataType: 'json', 
+			success: function(data) { 
+				  tracks = data; 
+				  alert(tracks.length);
+			} 
+	  });
+	  */
+	  
+	  $.getJSON('lastfm_test_tag_freq_1000.json');
+	  alert(tracks.length);
+  }
+  
+  
+  </script> 
+</head>
+
+<body onload="init();">
+  <p> this is a test </p>
+</body>
+
+
