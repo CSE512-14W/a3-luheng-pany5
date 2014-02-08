@@ -9,3 +9,5 @@ TEST_SET_PATH = ROOT_PATH + "/lastfm_test"
 SUBSET_PATH = ROOT_PATH + "/lastfm_subset"
 
 TAGS_PATH = ROOT_PATH + "/lastfm_unique_tags.txt"
+
+CLEANED_DATA_PATH = "/Users/luheng/versioned/lastfm_vis/data"

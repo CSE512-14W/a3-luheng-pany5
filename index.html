@@ -3,14 +3,44 @@
 
 <head>
   <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script type="text/javascript" src="data/lastfm_100artist_graph.json"></script> 
 </head>
 
+<style>
+
+.node .selected {
+  stroke: yellow;
+  stroke-width: 2
+}
+
+.link {
+  stroke: yellow;
+}
+
+.brush .extent {
+  fill-opacity: .1;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+
+.ui-helper-hidden-accessible { display:none; }
+  
+</style>
+
 <body>
   <p> Visualize Your Music! </p>
-  <!-- input type="text" class="autocomplete" name="n1" />
-   -->
+  <div>
+    <input id="tags">
+  </div>
   <script type="text/javascript" src="lastfm_vis.js"></script>
 </body>
 

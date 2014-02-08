@@ -1,11 +1,11 @@
-var w = 1000;
-var h = 1000;
+var width = 800;
+var height = 600;
 var labelDistance = 0;
 
 var vis = d3.select("body")
 			.append("svg:svg")
-			.attr("width", w)
-			.attr("height", h);
+			.attr("width", width)
+			.attr("height", height);
 
 // Load the graph
 d3.json("data/lastfm_100artist_graph");
@@ -62,10 +62,10 @@ for (var i = 0; i < num_edges; i++) {
 
 // Figure out the parameters and try to make the graph less "wiggly"
 var force = d3.layout.force()
-  .size([w, h])
+  .size([width, height])
   .nodes(nodes)
   .links(links)
-  .gravity(0)
+  .gravity(1)
   .linkDistance(10)
   .charge(-3000)
   .linkStrength(function(x) {
@@ -80,7 +80,7 @@ var force2 = d3.layout.force()
   .linkDistance(0)
   .linkStrength(8)
   .charge(-100)
-  .size([w, h]);
+  .size([width, height]);
 
 force2.start();
 
@@ -102,15 +102,13 @@ var node = vis.selectAll("g.node")
 // node styles
 node.append("svg:circle")
 		.attr("r", function(d, i) {
-				return i < num_artists ? 20 : 10; 
+				return i < num_artists ? 10 : 20; 
 			})
 		.style("fill", function(d, i) {
 				return i < num_artists ? "blue" : "red"; 
 			})
 		.style("stroke", "#FFF")
 		.style("stroke-width", 1);
-  
-node.call(force.drag);
 
 // add labels
 var anchorLink = vis.selectAll("line.anchorLink")
@@ -163,10 +161,73 @@ force.on("tick", function() {
 			var shiftX = b.width * (diffX - dist) / (dist * 2);
 			shiftX = Math.max(-b.width, Math.min(0, shiftX));
 			var shiftY = 5;
-			this.childNodes[1].setAttribute("transform", "translate(" + shiftX + "," + shiftY + ")");
+			this.childNodes[1].setAttribute("transform",
+					"translate(" + shiftX + "," + shiftY + ")");
 		}
     });	
     anchorNode.call(updateNode);
     link.call(updateLink);
     anchorLink.call(updateLink);
 });
+
+// Control ...
+var drag = force
+.drag()
+.on("dragstart", dragstart);
+
+node.call(drag)
+.on("dblclick", dblclick);
+
+// TODO: set everything else to normal
+function dragstart(d) {
+	d3.select(this)
+		.classed("fixed", d.fixed = true)
+		.classed("x", d.x = width / 2)
+		.classed("y", d.y = height / 2);
+}
+
+function dblclick(d) {
+	d3.select(this).classed("fixed", d.fixed = false);
+}
+
+tagbox = $("#tags")
+	.autocomplete({
+		source: labels
+		/*messages: {
+			noResults: '',
+			results: function() {}
+		*/
+	})
+	.keyup(function(e) {
+	    if(e.which == 13) {
+	        query_tag = $(this).val();
+	        pruneGraph(query_tag);
+	    }
+	});
+
+function pruneGraph(query_tag) {
+	var tag_idx = $.inArray(query_tag, labels);
+	alert(tag_idx);
+	// update nodes and links
+	
+}
+
+
+//brushing directly on the graph?
+//TODO: make this work....
+//ref: http://bl.ocks.org/mbostock/4560481
+/*
+var brush = vis.append("g")
+		.attr("class", "brush")
+		.call(d3.svg.brush()
+				.x(d3.scale.identity().domain([0, width]))
+				.y(d3.scale.identity().domain([0, height]))
+				.on("brush", function() {
+					var extent = d3.event.target.extent();
+					node.classed("selected", function(d) {
+						return extent[0][0] <= d.x && d.x < extent[1][0]
+							&& extent[0][1] <= d.y && d.y < extent[1][1];
+				});
+			}));
+
+*/
