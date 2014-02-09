@@ -18,7 +18,7 @@ from data_utils import *
 from data_config import *
 import path_config
 
-def get_unique_tags(tag_file_path, tag_freq_cutoff = 1000):
+def get_unique_tags(tag_file_path, tag_freq_cutoff = 5000):
     """ read tag list and their frequency
     """
     tag_freq = {}
@@ -71,8 +71,8 @@ def process(output_file_path, max_num_artists = 500):
     obj_counter = 0
     artist_tag = cooc_mat(100000, len(tag_freq) + 10)
 
-    for root_dir in [path_config.TRAIN_SET_PATH, path_config.TEST_SET_PATH]:
-    #for root_dir in [path_config.TEST_SET_PATH]:
+    #for root_dir in [path_config.TRAIN_SET_PATH, path_config.TEST_SET_PATH]:
+    for root_dir in [path_config.TEST_SET_PATH]:
         print "reading data from: ", root_dir
         for (dirpath, dirnames, filenames) in os.walk(root_dir):
             for filename in filenames:
@@ -157,6 +157,9 @@ def process(output_file_path, max_num_artists = 500):
     for id in range(len(links)):
         neighbors = links[id]["n"]
         weights = links[id]["w"]
+        if len(neighbors) == 0:
+            continue
+        
         log_freq = log(label_freq[id])
         # normalized PMI
         new_weights = [(log(weights[i]) + log_total_freq \
@@ -195,6 +198,6 @@ def process(output_file_path, max_num_artists = 500):
     return None
 
 if __name__ == '__main__':
-    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_10000artist_adj_graph.json'
-    process(output_file_path, 10000)
+    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_500artist_adj_graph.json'
+    process(output_file_path, 500)
     

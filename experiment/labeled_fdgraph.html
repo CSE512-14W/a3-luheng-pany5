@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Force based label placement</title>
+    <title>Visualization of Last.fm Arists and Tags</title>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="../data/lastfm_100artist_graph.json"></script>
   </head>
@@ -51,7 +51,7 @@
       for (var i = 0; i < num_edges; i++) {
     	   var edge = edges[i];
     	   var source_id = edge["artist"]
-    	   if (edge["weight"] < 0.1) continue;
+    	   if (edge["weight"] < 0.05) continue;
          links.push({
               source : source_id,
               target : edge["tag"],
