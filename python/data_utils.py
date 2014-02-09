@@ -30,6 +30,9 @@ class label_dict:
         res = [self.update(s, accept_new) for s in str_list]
         return [[t[0] for t in res], [t[1] for t in res]]
     
+    def size(self):
+        return len(self.idx2str)
+    
     def print_info(self):
         print "total size: ", len(self.idx2str)
         # print most common labels

@@ -9,9 +9,6 @@
 # stats with tag cut-off:
 # Read 125696 tags with frequency >= 5
 # Found 943334 track files.
-
-
-
 import json
 import os
 import sys
@@ -62,64 +59,38 @@ def process(output_file_path):
     """ walk through the raw data directory and output an integrated json file
     """
     tag_freq = get_unique_tags(path_config.TAGS_PATH); 
-    
-    # print tag list
     for t in tag_freq.keys():
         print t, tag_freq[t]
-    
-    file_list = []
-    track_list = []
-    
+  
     artists = label_dict()
     tags = label_dict()
-    """
-    for (dirpath, dirnames, filenames) in os.walk(path_config.TRAIN_SET_PATH):
-        for filename in filenames:
-            file_list.append(os.path.join(dirpath, filename));
-    """
-    for (dirpath, dirnames, filenames) in os.walk(path_config.TEST_SET_PATH):
-        for filename in filenames:
-            file_list.append(os.path.join(dirpath, filename));
-       
-    print "Found %d track files." % len(file_list)
     
     file_counter = 0
     obj_counter = 0
+    artist_tag = cooc_mat(100000, 200)
 
-    artist_tag = cooc_mat(5000, 200)
-
-    for filename in file_list:
-        with open(filename, 'r') as input_file:
-            file_counter += 1
-            input_obj = json.load(input_file)
-            input_file.close()
-            
-            tag_list = input_obj['tags']
-            input_obj['tags'] = get_trimmed_tag_list(tag_list, tag_freq)
-             
-            if len(input_obj['tags']) > 0:
-                del input_obj['track_id']
-                del input_obj['similars']
-                del input_obj['title']
-                 
-                #year = int(input_obj['timestamp'][:4])
-              
-                del input_obj['timestamp']
-                #input_obj['year'] = year
-                
-                [artist_id, _] = artists.update(input_obj['artist'])
-                
-                for tag in input_obj['tags']:
-                    [tag_id, _] = tags.update(tag)
-                    #    print tag, tag_id
-                    artist_tag.update(artist_id, tag_id)
-            
-                track_list.append(input_obj)
-                obj_counter += 1
-                if obj_counter % 10000 == 0:
-                    print "processed %06d files, keeping %06d\r" % (file_counter, obj_counter)
-    
-    artist_ids = [t[0] for t in artists.counter.most_common(100)]
+    #for root_dir in [path_config.TRAIN_SET_PATH, path_config.TEST_SET_PATH]:
+    for root_dir in [path_config.TEST_SET_PATH]:
+        print "reading data from: ", root_dir
+        for (dirpath, dirnames, filenames) in os.walk(root_dir):
+            for filename in filenames:
+                with open(os.path.join(dirpath, filename), 'r') as input_file:
+                    file_counter += 1
+                    input_obj = json.load(input_file)
+                    input_file.close()
+                    tag_list = input_obj['tags']
+                    new_tag_list = get_trimmed_tag_list(tag_list, tag_freq)
+                    if len(input_obj['tags']) > 0:
+                        [artist_id, _] = artists.update(input_obj["artist"])
+                        for tag in new_tag_list:
+                            [tag_id, _] = tags.update(tag)
+                            artist_tag.update(artist_id, tag_id)
+                    
+                        obj_counter += 1
+                        if obj_counter % 1000 == 0:
+                            print "processed %06d files, keeping %06d tracks, %06d artists\r" % (file_counter, obj_counter, artists.size())
+ 
+    artist_ids = [t[0] for t in artists.counter.most_common(500)]
     artist_tag_mat = artist_tag.mat.tocsr()
     remap_artists = {}
     remap_tags = {}
@@ -133,21 +104,27 @@ def process(output_file_path):
         labels.append(artists.idx2str[artist_id])
     
     tag_id_start = len(labels)
-    
     for artist_id in artist_ids:
         [tag_ids, weights] = get_row(artist_tag_mat, artist_id)
-        weights_norm = sum(weights)
+        artist_freq = artists.counter[artist_id]
+        tag_freq = tags.counter[tag_id]
+        
+        #weights_norm = sum(weights)
         new_artist_id = remap_artists[artist_id]
-        for (i,tag_id) in enumerate(tag_ids):
+        new_tag_ids = []
+        new_weights = []
+        for i in range(len(tag_ids)):
+            tag_id = tag_ids[i]
             if not tag_id in remap_tags:
                 new_tag_id = len(labels)
                 remap_tags[tag_id] = new_tag_id
                 labels.append(tags.idx2str[tag_id])
             else:
                 new_tag_id = remap_tags[tag_id]
+            tag_ids[i] = new_tag_id
+            weights[i] = 1.0 * weights[i] / artist_freq / tag_freq
             
-            weight = 1.0 * weights[i] / weights_norm
-            links.append({"artist":new_artist_id, "tag":new_tag_id, "weight":weight})
+        links.append({"artist":new_artist_id, "tags":tag_ids, "weights":weights})
             
     graph = {}
     graph["labels"] = labels
@@ -158,7 +135,7 @@ def process(output_file_path):
         json.dump(graph, output_file)
         output_file.close()
         
-    print "Got %d tracks with non-empty tag list" % len(track_list)
+    print "Got %d tracks with non-empty tag list" % obj_counter
     
     print "top artists"
     artists.print_info()
@@ -170,6 +147,6 @@ def process(output_file_path):
     return None
 
 if __name__ == '__main__':
-    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_100artist_graph.json'
+    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_500artist_adj_graph.json'
     process(output_file_path)
     

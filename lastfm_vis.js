@@ -216,7 +216,7 @@ function dblclick(d) {
 	d3.select(this).classed("fixed", d.fixed = false);
 }
 
-function pruneGraph(viewPoint, hops, weight_threshold) {
+function pruneGraph(viewPoint, max_hops, max_fanout, min_weight) {
 	var node_idx = $.inArray(viewPoint, raw_labels);
 	labels = [];
 	edges = [];
@@ -239,21 +239,24 @@ function pruneGraph(viewPoint, hops, weight_threshold) {
 		labels.push(raw_labels[idx]);
 		raw_ids.push(idx);
 		// TODO: change the graph representation in Python...
-		if (dep >= hops) {
+		if (dep >= max_hops) {
 			continue;
 		}
-		for (var i = 0; i < raw_edges.length; i++) {
+		fanout = 0;
+		for (var i = 0; i < raw_edges.length && fanout < max_fanout; i++) {
 			var edge = raw_edges[i];
 			var u = edge.artist, 
 				v = edge.tag,
 				w = edge.weight;
-			if (w < weight_threshold) {
+			if (w < min_weight) {
 				continue;
 			}
 			if (u == idx) {
 				queue.push({ id:v, depth:dep+1 });
+				fanout += 1;
 			} else if (v == idx) {
 				queue.push({ id:u, depth:dep+1 });
+				fanout += 1;
 			}
 		}
 	}
@@ -263,7 +266,7 @@ function pruneGraph(viewPoint, hops, weight_threshold) {
 		var u = edge.artist, 
 			v = edge.tag,
 			w = edge.weight;
-		if (w < weight_threshold) {
+		if (w < min_weight) {
 			continue;
 		}
 		var u0 = $.inArray(u, raw_ids),
@@ -275,19 +278,19 @@ function pruneGraph(viewPoint, hops, weight_threshold) {
 }
 
 //Initialize data
-d3.json("data/lastfm_100artist_graph");
+d3.json("data/lastfm_5000artist_graph");
 raw_labels = graph["labels"],
 raw_edges = graph["links"],
 num_artists = graph["tag_id_start"];
-pruneGraph("rock", 5, 0.08);
+pruneGraph("rock", 5, 5, 0.1);
 updateGraph(false);
 
-var tagbox = $("#tags").autocomplete({
+var tagbox = $("#input_artist").autocomplete({
 		source: raw_labels
 		//messages: { noResults: '', results: function() {} 
 	}).keyup(function(e) {
 		if(e.which == 13) {
-			pruneGraph($(this).val(), 2, 0.03);
+			pruneGraph($(this).val(), 2, 10, 0.01);
 			updateGraph(true);
 		}
 	});
