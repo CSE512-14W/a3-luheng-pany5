@@ -11,6 +11,7 @@
 # Found 943334 track files.
 import json
 from math import log
+import numpy
 import os
 import sys
 
@@ -18,7 +19,7 @@ from data_utils import *
 from data_config import *
 import path_config
 
-def get_unique_tags(tag_file_path, tag_freq_cutoff = 5000):
+def get_unique_tags(tag_file_path, tag_freq_cutoff = 3000):
     """ read tag list and their frequency
     """
     tag_freq = {}
@@ -166,17 +167,19 @@ def process(output_file_path, max_num_artists = 500):
                        - log_freq - log(label_freq[neighbors[i]])) / \
                        (- log(weights[i]) + log_total_freq) \
                        for i in range(len(neighbors))]
-        links[id]["w"] = new_weights
-        """
+        # sort by weight in descending order
+        indices = numpy.argsort(new_weights)[::-1]
+        links[id]["n"] = [neighbors[i] for i in indices]
+        links[id]["w"] = [new_weights[i] for i in indices]
+        # sanity check by eyes 0_o
         if id < tag_id_start and label_freq[id] > 100:
             try:
                 print labels[id], len(neighbors)
-                for (i, j) in enumerate(neighbors): 
-                    print new_weights[i], label_freq[j], labels[j]
+                for (i, j) in enumerate(links[id]["n"]): 
+                    print links[id]["w"][i], label_freq[j], labels[j]
                 print "\n"
             except UnicodeEncodeError:
                 continue
-        """
         
     graph = {}
     graph["labels"] = labels
