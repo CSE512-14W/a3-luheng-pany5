@@ -10,15 +10,6 @@
 
 <style>
 
-.node .selected {
-  stroke: yellow;
-  stroke-width: 2
-}
-
-.link {
-  stroke: yellow;
-}
-
 .brush .extent {
   fill-opacity: .1;
   stroke: #fff;
@@ -37,11 +28,13 @@
 </style>
 
 <body>
-  <p> Visualize Your Music! </p>
-  <div>
-    <input id="tags">
+  <p> Explore Your Music! </p>
+  <div style="float:left; width:20%;">
+	   <input id="tags">
+	</div>
+  <div style="float:left; width:80%;">
+     <script type="text/javascript" src="lastfm_vis.js"></script>
   </div>
-  <script type="text/javascript" src="lastfm_vis.js"></script>
 </body>
 
 
