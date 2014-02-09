@@ -20,13 +20,17 @@ var nodes,
 	labelAnchorLinks,
 	links;
 
+// Read from JSON
 var raw_labels = null,
 	raw_edges = null,
+	raw_counts = null,
 	num_artists = 0;
 
 var labels = null,
 	edges = null,
-	node_type = null; // 0: artist, 1:
+	counts = null,
+	node_type = null, // 0: artist, 1:
+	centrality = null; // number of hops from the graph center
 	
 var updateLink = function() {
 	this.attr("x1", function(d) { return d.source.x; })
@@ -83,7 +87,11 @@ var updateGraph = function(redraw) {
 	  .nodes(nodes)
 	  .links(links)
 	  .gravity(1)
-	  .linkDistance(10)
+	  .linkDistance( function(d) {
+		  //return 10 + 2 * Math.min(centrality[d.source], centrality[d.target]);
+		  //return d.weight * 10;
+		  return 15;
+	  })
 	  .charge(-3000)
 	  .linkStrength( function(d) {
 	  	  return d.weight * 10;
@@ -104,64 +112,55 @@ var updateGraph = function(redraw) {
 	
 	drag = force.drag().on("dragstart", dragstart);
 	
-	link = /*redraw ? 
-			vis.selectAll("line.link")
-				.data(links)
-				.exit()
-				.remove() :*/
-			vis.selectAll("line.link")
-				.data(links)
-				.enter()
-				.append("svg:line")
-				.attr("class", "link")
-				.attr("stroke-width", function(d) {
-					return d.weight * 30;
-				});
+	link = vis.selectAll("line.link")
+			.data(links)
+			.enter()
+			.append("svg:line")
+			.attr("class", "link")
+			.attr("stroke-width", function(d) {
+				return d.weight * 15;
+			});
 	
 	link.style("stroke", "grey")
 		.style("opacity", 0.6);
 
-	node = /*redraw ?
-			vis.selectAll("g.node")
-				.data(force.nodes())
-				.exit()
-				.remove() :*/
-			vis.selectAll("g.node")
-				.data(force.nodes())
-				.enter()
-				.append("svg:g")
-				.attr("class", "node");
+	node = vis.selectAll("g.node")
+			.data(force.nodes())
+			.enter()
+			.append("svg:g")
+			.attr("class", "node");
 	
 	node.append("svg:circle")
 		.attr("r", function(d, i) {
-				return node_type[i] == 0 ? 10 : 15; 
+				return 30 - 5 * centrality[i];
+				//return node_type[i] == 0 ? 10 : 15;
 			})
 		.style("fill", function(d, i) {
-				return node_type[i] == 0 ? "steel" : "purple"; 
+				return node_type[i] == 0 ? "teal" : "purple"; 
 			})
-		.style('opacity', 0.6)
-		.style("stroke", "#FFF")
-		.style("stroke-width", 1);
+		.style("opacity", 0.6)
+		.style("stroke", function(d, i) {
+				return centrality[i] == 0 ? "yellow" : "#FFF";
+			})
+		.style("stroke-width", function(d, i) {
+				return centrality[i] == 0 ? 3 : 1;
+			});
 	
-	node.call(drag).on("dblclick", dblclick);
+	node.on("dblclick", dblclick)
+		.on("mouseover", function() {
+				d3.select(this).select("svg.circle")
+					.transition()
+					.duration(750)
+					.attr("r", 30);
+		}).call(drag);
 	
-	anchorLink = /*redraw ?
-			vis.selectAll("line.anchorLink")
-				.data(labelAnchorLinks)
-				.exit()
-				.remove() :*/
-			vis.selectAll("line.anchorLink")
+	anchorLink = vis.selectAll("line.anchorLink")
 				.data(labelAnchorLinks)
 				.enter()
 				.append("svg:line")
 				.attr("class", "anchorLink");
 		
-	anchorNode = /*redraw ?
-			vis.selectAll("g.anchorNode")
-				.data(force2.nodes())
-				.exit()
-				.remove() :*/
-			vis.selectAll("g.anchorNode")
+	anchorNode = vis.selectAll("g.anchorNode")
 				.data(force2.nodes())
 				.enter()
 				.append("svg:g")
@@ -177,7 +176,7 @@ var updateGraph = function(redraw) {
 		})
 		.style("fill", "black")
 		.style("font-family", "Helvetica")
-		.style("font-size", 12);
+		.style("font-size", 13);
 	
 	force.on("tick", function() {
 		force2.start();
@@ -207,27 +206,29 @@ var updateGraph = function(redraw) {
 // TODO: set everything else to normal
 function dragstart(d) {
 	d3.select(this)
-		.classed("fixed", d.fixed = true)
-		.classed("x", d.x = width / 2)
-		.classed("y", d.y = height / 2);
+		.classed("fixed", d.fixed = true);
 }
 
 function dblclick(d) {
 	d3.select(this).classed("fixed", d.fixed = false);
 }
 
-function pruneGraph(viewPoint, max_hops, max_fanout, min_weight) {
+function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
+					min_label_freq) {
 	var node_idx = $.inArray(viewPoint, raw_labels);
 	labels = [];
 	edges = [];
+	counts = [];
 	node_type = [];
+	centrality = [];
 	raw_ids = [];
 	queue = [];
 	queue.push({ id:node_idx, depth:0 });
 	while (queue.length > 0) {
 		var curr = queue.shift();
 		var idx = curr.id,
-			dep = curr.depth
+			dep = curr.depth;
+		// skip already visited nodes
 		if ($.inArray(idx, raw_ids) >= 0) {
 			continue;
 		}
@@ -237,52 +238,53 @@ function pruneGraph(viewPoint, max_hops, max_fanout, min_weight) {
 			node_type.push(1);
 		}
 		labels.push(raw_labels[idx]);
+		counts.push(raw_counts[idx]);
+		centrality.push(dep);
 		raw_ids.push(idx);
-		// TODO: change the graph representation in Python...
+		
 		if (dep >= max_hops) {
 			continue;
 		}
-		fanout = 0;
-		for (var i = 0; i < raw_edges.length && fanout < max_fanout; i++) {
-			var edge = raw_edges[i];
-			var u = edge.artist, 
-				v = edge.tag,
-				w = edge.weight;
-			if (w < min_weight) {
-				continue;
-			}
-			if (u == idx) {
-				queue.push({ id:v, depth:dep+1 });
-				fanout += 1;
-			} else if (v == idx) {
-				queue.push({ id:u, depth:dep+1 });
+		var fanout = 0;
+		var _neighbors = raw_edges[idx].n;
+		var _weights = raw_edges[idx].w;
+		for (var i = 0; i < _neighbors.length && fanout < max_fanout; i++) {
+			var neighbor = _neighbors[i],
+				weight = _weights[i];
+			if (weight >= min_weight && raw_counts[neighbor] >= min_label_freq) {
+				queue.push({ id:neighbor, depth:dep+1 });
 				fanout += 1;
 			}
 		}
 	}
-	// re-computed edges
-	for (var i = 0; i < raw_edges.length; i++) {
-		var edge = raw_edges[i];
-		var u = edge.artist, 
-			v = edge.tag,
-			w = edge.weight;
-		if (w < min_weight) {
+	// add every edge in the node set
+	for (var u = 0; u < raw_ids.length; u++) {
+		var u0 = raw_ids[u];
+		if (u0 >= num_artists) {
 			continue;
 		}
-		var u0 = $.inArray(u, raw_ids),
-			v0 = $.inArray(v, raw_ids);
-		if (u0 >= 0 && v0 >= 0) {
-			edges.push({ source:u0, target:v0, weight:w });
+		var _neighbors = raw_edges[u0].n,
+			_weights = raw_edges[u0].w;
+		for (var i = 0; i < _neighbors.length; i++) {
+			var v0 = _neighbors[i], 
+				v = $.inArray(v0, raw_ids),
+				weight = _weights[i];
+			if (v >= 0 && weight >= min_weight) {
+				edges.push({ source:u, target:v, weight:weight });
+			}
 		}
 	}
+	//alert(labels.length + ", " + edges.length);
 }
 
 //Initialize data
-d3.json("data/lastfm_5000artist_graph");
+d3.json("data/lastfm_500artist_adj_graph");
 raw_labels = graph["labels"],
 raw_edges = graph["links"],
 num_artists = graph["tag_id_start"];
-pruneGraph("rock", 5, 5, 0.1);
+raw_counts = graph["frequency"];
+
+pruneGraph("rock", 5, 3, 0.2, 100);
 updateGraph(false);
 
 var tagbox = $("#input_artist").autocomplete({
@@ -290,7 +292,7 @@ var tagbox = $("#input_artist").autocomplete({
 		//messages: { noResults: '', results: function() {} 
 	}).keyup(function(e) {
 		if(e.which == 13) {
-			pruneGraph($(this).val(), 2, 10, 0.01);
+			pruneGraph($(this).val(), 3, 5, 0.2, 10);
 			updateGraph(true);
 		}
 	});
