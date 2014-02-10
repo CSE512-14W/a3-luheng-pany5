@@ -35,4 +35,4 @@ We brainstormed potential topics and searched for datasets together. After we ch
   -	study data domain and data wrangling 		    	(3 hours)
   - draft the write-up                    				(4 hours)
 
-Learning d3 and implementing the Force-Directed Graph with event handlers took us most of time. 
+Learning d3 and implementing the network visualization with event handlers took us most of time. 
