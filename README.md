@@ -16,7 +16,7 @@ Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/
 
 ## Story Board
 
-See our story board at [link to your storyboard pdf file](storyboard.pdf?raw=true) here.
+See our story board at [here](storyboard.pdf?raw=true).
 
 ### Changes between Storyboard and the Final Implementation
 
