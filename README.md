@@ -25,12 +25,12 @@ We made two major changes between the storyboard and the final visualization. Fi
 
 ## Development Process
 We brainstormed potential topics and searched for datasets together. After we chose our dataset and discussed the initial visualization design and interactive technique, we split the work roughly as follows,
--Luheng He
+- Luheng He
   -	Data processing and preparation				        (3 hours) 	
   -	Design and Coding for Visualization			      (16 hours)
   -	Algorithm for Graph Construction				      (2 hours)
   -	Tech part of the write-up					            (3 hours)
--Yi Pan
+- Yi Pan
   -	design storyboard sketches				            (2 hours)
   -	study data domain and data wrangling 		    	(3 hours)
   - draft the write-up                    				(4 hours)
