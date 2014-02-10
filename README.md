@@ -75,10 +75,17 @@ Learning d3 and implementing the network visualization with event handlers took 
 ## Techinical Challenge
 
 ### Big Data
+The Last.fm Million Song dataset (http://labrosa.ee.columbia.edu/millionsong/lastfm) contains 943,347 tracks, 522,366 unique user-add tags and more than 44,745 unique artists [1]. Each data entry contains a song, with information about its title, artist, user-add tags and a set of similar tracks. This dataset is significantly larger than any datasets we used for past assignments (i.e., the IMDB movie datasets with 3000 movies). To visualize this dataset, we need to make the correct design choices on the following aspects:
+- Choosing a reasonable level of abstraction
+- Selecting a subset of the data that people care about.
+
+Therefore, we changed the dataset from track-level to artist-level. Instead of computing co-occurrence between tags and songs, we compute the co-occurrence between artists and tags instead. For example, if "Coldplay" has lots of songs tagged as "britpop" or "soft rock", then we consider "Coldplay" can be labeled as a "britpop"/"soft rock" artist. 
+
+### Noisiness of User-add Tags
 
 ### Relevance-Popularity Trade-off of Artists
 
-### Noisiness of User-add Tags
+
 
 
 ## References
