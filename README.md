@@ -18,12 +18,18 @@ Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/
 
 See our story board at [here](storyboard.pdf?raw=true).
 
+In Figure 1, a dot means a song track and a circle means a tag name. A track with many tags will be listed in the middle and linked with each tag name through edges. We used various colors to differentiate top 10 most popular tag nodes for a specific artist. When users click a track, it will highlight its associated tags, display the track title and start to play the track. In the bottom, it shows the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist in search. 
+
+In Figure 2, it shows some popular artists and similar tags for one or more selected tags. Here a dot means an artist and a circle means a tag name. When searching for some tags, artists connected with at least one selected tag will get highlighted. When mousing over an artist, it will display the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist. 
+
 ### Changes between Storyboard and the Final Implementation
 
 We made two major changes between the storyboard and the final visualization. Firstly, we planned to incorporate track title information in the storyboard visualization. Because we couldn’t find the audio hyperlinks for the song tracks, we gave up our original design of displaying song titles and playing songs, along with network exploration. Secondly, we added on the feature of finding similar artists in the final visualization. Since the dataset includes similar tracks for each track, we also computed the relevance between artists and tags by normalized PMI (point-wise mutual information), which helped find some similar artists to the selected artist.
 
 ## Final Visualization
+![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.22.30%20PM.png)
 
+![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.41.53%20PM.png)
 
 ## Development Process
 
