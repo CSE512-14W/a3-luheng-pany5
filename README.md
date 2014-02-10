@@ -7,14 +7,14 @@ a3-luheng-pany5
 2. Yi Pan pany5@uw.edu
 
 ## Project Name
-
-This interactive web application allows users to explore the relationship between music tags and artists from Million Song Last.fm dataset.
+"Explore Your Musicians!"
+This interactive web application allows users to search, click and explore thousands of musicians and their related tags via a musician-tag relevance network. The visualization uses a large subset of the Million Song Last.fm dataset (http://labrosa.ee.columbia.edu/millionsong/), including 10,000 most popular artists and about 400 user-added tags.
 
 ## Running Instructions
 
 Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/
 
-## Story Board
+## Storyboard
 
 See our story board at [here](storyboard.pdf?raw=true).
 
