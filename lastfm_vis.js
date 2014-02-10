@@ -477,7 +477,7 @@ var leg1 = legends.append("circle").attr("r", 10).attr("cx", 15).attr("cy", 18);
 var legtext1 = legends.append("text").text("artist").attr("x", 30).attr("y", 24);
 
 var leg2 = legends.append("circle").attr("r", 10).attr("cx", 95).attr("cy", 18);
-var legtext2 = legends.append("text").text("user added tag").attr("x", 110).attr("y", 24);
+var legtext2 = legends.append("text").text("user-added tag").attr("x", 110).attr("y", 24);
 leg1.style("fill", "teal").style("opacity", 0.5);
 leg2.style("fill", "purple").style("opacity", 0.5);
 legtext1.style("font-size", 16)

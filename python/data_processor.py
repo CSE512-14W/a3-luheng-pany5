@@ -182,7 +182,7 @@ def process(output_file_path, max_num_artists = 500):
         links[id]["w"] = [round(new_weights[i], 3) for i in indices]
         
         # sanity check by eyes 0_o
-        if id >= tag_id_start and label_freq[id] > 1000:
+        if id >= tag_id_start and label_freq[id] > 5000:
             try:
                 print labels[id], len(neighbors)
                 for (i, j) in enumerate(links[id]["n"][:10]): 
@@ -211,6 +211,6 @@ def process(output_file_path, max_num_artists = 500):
     return None
 
 if __name__ == '__main__':
-    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_10000artist_graph_new.json'
+    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_10000artist_graph_new2.json'
     process(output_file_path, 10000)
     

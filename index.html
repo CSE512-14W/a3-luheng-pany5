@@ -7,7 +7,7 @@
   <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script type="text/javascript" src="data/lastfm_10000artist_graph_new.json"></script>
  
-  <title> Explore Your Music! </title>
+  <title> Explore Your Musician! </title>
 </head>
 
 <style>
@@ -85,18 +85,22 @@ body {
 p {
     white-space: nowrap; 
 }
+
+h1 {
+   font-family : "Helvetica";
+}
    
 </style>
 
 <body>
   <div id="header" style="float:top; height:15%; text-align:center">
-    <h1> Explore Your Music! </h1>
+    <h1> Explore Your Musician! </h1>
     <div style="align:center">
         <div id="legend">
 	        <img id="help_icon" src="images/help-icon.png" width=24 height=24 style="padding-right 20px;">
 	        <img id="info_icon" src="images/info-icon.png" width=24 height=24 >
         </div>
-     <input id="input_artist" class="autocomp-input"> 
+     <input id="input_artist" placeholder="try type: Coldplay or: britpop" class="autocomp-input"> 
      </div>
   </div>
   
