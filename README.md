@@ -33,15 +33,18 @@ We made two major changes between the storyboard and the final visualization. Fi
 
 ## Final Visualization
 
-![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.41.53%20PM.png)
-
 
 Move mouse over the icons on top of the page to see information about how to play with the visualization.
 
-![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.22.30%20PM.png)
-
+![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.41.53%20PM.png)
 
 Type artist name in the search box or double-click on nodes to see related tags and similar artists on the network. Move mouse over nodes to highlight part of the graph.
+
+![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.22.30%20PM.png)
+
+Double-click on the "trance" node to see a new network showing all the related bands and tags/subgenres ... and keep exploring!
+
+![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/trance.png)
 
 
 ## Development Process
