@@ -15,6 +15,7 @@
 .autocomp-input  {
 	text-align : left;
 	width : 200px;
+	margin : auto;
 	font-family : "Helvtica";
 	font-size : 12;
 	display: block;
@@ -23,12 +24,6 @@
   border-radius: 5px;
   color: #333;
   transition: all 0.3s ease-out;
-}
-
-.brush .extent {
-  fill-opacity: .1;
-  stroke: #fff;
-  shape-rendering: crispEdges;
 }
 
 .ui-menu {
@@ -71,17 +66,12 @@
 <body>
   <div id="header" style="float:top; height:10%; text-align:center">
     <h1> Explore Your Music! </h1>
+    <div style="align:center">
+     <input title="search an artist name!" id="input_artist" class="autocomp-input">
+     </div>
   </div>
-  <div id="content" style="float:bottom; height:90%; text-align:center">
-	  <div style="float:left; width:20%; text-align:center">
-	    <h2> Search an Artist's Name </h2>
-	    <div id="input1" style="text-align:center">
-	      <input title="search an artist name!" id="input_artist" class="autocomp-input">
-	    </div> 
-		</div>
-	  <div style="float:left; width:80%;">
+  <div id="content" style="float:bottom; height:90%; margin-top:100">
 	     <script type="text/javascript" src="lastfm_vis.js"></script>
-	  </div>
   </div>
 </body>
 

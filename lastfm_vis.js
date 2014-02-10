@@ -2,11 +2,13 @@ var width = 1000;
 var height = 800;
 var labelDistance = 0;
 
-var vis = d3.select("body")
-			.append("svg:svg")
+var vis = d3.select("#content")
+			.append("svg")
 			.attr("width", width)
-			.attr("height", height);
-
+			.attr("height", height)
+			.style("margin", "auto");
+			//.style("margin-right", "auto");
+			
 var link, 
 	node, 
 	anchorLink,
@@ -377,7 +379,7 @@ raw_edges = graph["links"],
 num_artists = graph["tag_id_start"];
 raw_counts = graph["frequency"];
 
-pruneGraph("rock", 6, 2, 0.15, 150);
+pruneGraph("rock", 6, 3, 0.15, 200);
 updateGraph(false);
 
 var tagbox = $("#input_artist").autocomplete({
@@ -385,7 +387,7 @@ var tagbox = $("#input_artist").autocomplete({
 		//messages: { noResults: '', results: function() {} 
 	}).keyup(function(e) {
 		if(e.which == 13) {
-			pruneGraph($(this).val(), 3, 5, 0.1, 20);
+			pruneGraph($(this).val(), 2, 10, 0.15, 1);
 			updateGraph(true);
 		}
 	});

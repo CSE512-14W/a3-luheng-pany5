@@ -172,14 +172,17 @@ def process(output_file_path, max_num_artists = 500):
             # sort neighbor tags by PMI
             indices = numpy.argsort(new_weights)[::-1]
         else:
-            # sort neighbor artists by Frequency
-            indices = numpy.argsort(log_neighbor_freq)[::-1]
+            # sort neighbor artists by combined relevance and Frequency
+            id1 = dict([(j,i) for (i,j) in enumerate(numpy.argsort(log_neighbor_freq)[::-1])])
+            id2 = dict([(j,i) for (i,j) in enumerate(numpy.argsort(new_weights)[::-1])])
+            ranker = [id1[i] + id2[i] for i in range(num_neighbors)]
+            indices = numpy.argsort(ranker)
             
         links[id]["n"] = [neighbors[i] for i in indices]
         links[id]["w"] = [round(new_weights[i], 3) for i in indices]
         
         # sanity check by eyes 0_o
-        if id >= tag_id_start and label_freq[id] > 5000:
+        if id >= tag_id_start and label_freq[id] > 1000:
             try:
                 print labels[id], len(neighbors)
                 for (i, j) in enumerate(links[id]["n"][:10]): 
