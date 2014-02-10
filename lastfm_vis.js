@@ -29,6 +29,7 @@ var raw_labels = null,
 var labels = null,
 	edges = null,
 	counts = null,
+	raw_ids = null,
 	node_type = null, // 0: artist, 1:
 	centrality = null; // number of hops from the graph center
 	
@@ -90,7 +91,7 @@ var updateGraph = function(redraw) {
 	  .linkDistance( function(d) {
 		  //return 10 + 2 * Math.min(centrality[d.source], centrality[d.target]);
 		  //return d.weight * 10;
-		  return 15;
+		  return 20;
 	  })
 	  .charge(-3000)
 	  .linkStrength( function(d) {
@@ -115,14 +116,14 @@ var updateGraph = function(redraw) {
 	link = vis.selectAll("line.link")
 			.data(links)
 			.enter()
-			.append("svg:line")
-			.attr("class", "link")
-			.attr("stroke-width", function(d) {
-				return d.weight * 15;
-			});
-	
-	link.style("stroke", "grey")
-		.style("opacity", 0.6);
+			.append("line")
+			.attr("class", "link");
+
+	link.style("stroke-width", function(d) {
+			return d.weight * 5;
+		})
+		.style("stroke", "grey")
+		.style("opacity", 0.3);
 
 	node = vis.selectAll("g.node")
 			.data(force.nodes())
@@ -130,12 +131,15 @@ var updateGraph = function(redraw) {
 			.append("svg:g")
 			.attr("class", "node");
 	
-	node.append("svg:circle")
+	node.append("circle")
 		.attr("r", function(d, i) {
-				return 30 - 5 * centrality[i];
+				return 10;
 				//return node_type[i] == 0 ? 10 : 15;
 			})
 		.style("fill", function(d, i) {
+				if (centrality[i] == 0) {
+					return "orange";
+				}
 				return node_type[i] == 0 ? "teal" : "purple"; 
 			})
 		.style("opacity", 0.6)
@@ -143,16 +147,13 @@ var updateGraph = function(redraw) {
 				return centrality[i] == 0 ? "yellow" : "#FFF";
 			})
 		.style("stroke-width", function(d, i) {
-				return centrality[i] == 0 ? 3 : 1;
+				return centrality[i] == 0 ? 5 : 1;
 			});
 	
 	node.on("dblclick", dblclick)
-		.on("mouseover", function() {
-				d3.select(this).select("svg.circle")
-					.transition()
-					.duration(750)
-					.attr("r", 30);
-		}).call(drag);
+		.on("mouseover", highlightVicinity)
+		.on("mouseout", fadeVicinity)
+		.call(drag);
 	
 	anchorLink = vis.selectAll("line.anchorLink")
 				.data(labelAnchorLinks)
@@ -166,11 +167,12 @@ var updateGraph = function(redraw) {
 				.append("svg:g")
 				.attr("class", "anchorNode");
 	
-	anchorNode.append("svg:circle")
+	anchorNode.append("circle")
 		.attr("r", 0)
-		.style("fill", "#FFF");
+		.style("fill", "#FFF")
+		.style("opacity", 0);
 	
-	anchorNode.append("svg:text")
+	anchorNode.append("text")
 		.text(function(d, i) {
 			return i % 2 == 0 ? "" : d.node.label;
 		})
@@ -178,6 +180,11 @@ var updateGraph = function(redraw) {
 		.style("font-family", "Helvetica")
 		.style("font-size", 13);
 	
+	/*
+	anchorNode
+		.on("mouseover", anchorMouseover)
+		.on("mouseout", anchorMouseout);
+	*/
 	force.on("tick", function() {
 		force2.start();
 		node.call(updateNode);
@@ -209,8 +216,93 @@ function dragstart(d) {
 		.classed("fixed", d.fixed = true);
 }
 
-function dblclick(d) {
-	d3.select(this).classed("fixed", d.fixed = false);
+function dblclick(d, i) {
+	d3.select(this)
+		.classed("fixed", d.fixed = false);
+	console.log(labels[i]);
+	pruneGraph(labels[i], 2, 5, 0.01, 20);
+	updateGraph(true);
+}
+
+function isLinkedTo(link_data, node_data) {
+	//console.log("%o, %o, %o", link_data.source, link_data.target, node_data);
+	return link_data.source == node_data || link_data.target == node_data;
+}
+
+function oneHopAway(new_id, center_id) {
+	for (var i = 0; i < links.length; i++) {
+		//console.log(i + ", " + links[i].source, + ", " + links[i].target + ", " + new_node + ", " + center_node);
+		if (links[i].source == center_id && links[i].target == new_id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function highlightVicinity(node_d, node_i) {
+	// bloat node
+	d3.select(this)
+		.select("circle")
+		.transition()
+		.duration(300)
+		.attr("r", 20);
+	
+	/*
+	node.transition()
+		.duration(300)
+		.style("fill", function(d, i) {
+			if (i == node_i) {
+				return "orange";
+			}
+			return oneHopAway(i, node_i) ? "pink" : "grey";
+		});
+	*/
+	// highlight link
+	link.transition()
+		.duration(300)
+		.style("stroke-width", function(d) {
+			return isLinkedTo(d, node_d) ? d.weight * 15 : d.weight * 5;
+		})
+		.style("stroke", function(d) {
+			return isLinkedTo(d, node_d) ? "gold" : "grey";
+		})
+		.style("opacity", function(d) {
+			return isLinkedTo(d, node_d) ? 0.8 : 0.3;
+		});
+}
+
+function fadeVicinity(d, i) {
+	d3.select(this)
+		.transition()
+		.duration(300)
+		.select("circle")
+	    .attr("r", 10);
+	
+	link.transition()
+		.duration(300)
+		.style("stroke-width", function(d) {
+			return d.weight * 5;
+		})
+		.style("stroke", "grey")
+		.style("opacity", function(d) {
+			return 0.3;
+		});
+}
+
+function anchorMouseover(d, i) {
+	d3.select(this)
+		.transition()
+		.duration(300)
+		.select("text")
+	    .attr("font-size", 20);
+}
+
+function anchorMouseout(d, i) {
+	d3.select(this)
+		.transition()
+		.duration(300)
+		.select("text")
+	    .attr("font-size", 13);
 }
 
 function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
@@ -258,6 +350,7 @@ function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
 		}
 	}
 	// add every edge in the node set
+	// recompute centrality here
 	for (var u = 0; u < raw_ids.length; u++) {
 		var u0 = raw_ids[u];
 		if (u0 >= num_artists) {
@@ -278,13 +371,13 @@ function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
 }
 
 //Initialize data
-d3.json("data/lastfm_500artist_adj_graph");
+d3.json("data/lastfm_10000artist_adj_graph");
 raw_labels = graph["labels"],
 raw_edges = graph["links"],
 num_artists = graph["tag_id_start"];
 raw_counts = graph["frequency"];
 
-pruneGraph("rock", 5, 3, 0.2, 100);
+pruneGraph("rock", 6, 2, 0.15, 150);
 updateGraph(false);
 
 var tagbox = $("#input_artist").autocomplete({
@@ -292,7 +385,7 @@ var tagbox = $("#input_artist").autocomplete({
 		//messages: { noResults: '', results: function() {} 
 	}).keyup(function(e) {
 		if(e.which == 13) {
-			pruneGraph($(this).val(), 3, 5, 0.2, 10);
+			pruneGraph($(this).val(), 3, 5, 0.1, 20);
 			updateGraph(true);
 		}
 	});

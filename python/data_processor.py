@@ -5,10 +5,6 @@
 # author: luheng
 #########################
 
-#########################
-# stats with tag cut-off:
-# Read 125696 tags with frequency >= 5
-# Found 943334 track files.
 import json
 from math import log
 import numpy
@@ -61,10 +57,11 @@ def print_artists(artist_ids, artists, tags, artist_tag):
 def process(output_file_path, max_num_artists = 500):
     """ walk through the raw data directory and output an integrated json file
     """
-    tag_freq = get_unique_tags(path_config.TAGS_PATH); 
+    tag_freq = get_unique_tags(path_config.TAGS_PATH);
+    """ 
     for t in tag_freq.keys():
         print t, tag_freq[t]
-  
+    """
     artists = label_dict()
     tags = label_dict()
     
@@ -72,8 +69,8 @@ def process(output_file_path, max_num_artists = 500):
     obj_counter = 0
     artist_tag = cooc_mat(100000, len(tag_freq) + 10)
 
-    #for root_dir in [path_config.TRAIN_SET_PATH, path_config.TEST_SET_PATH]:
-    for root_dir in [path_config.TEST_SET_PATH]:
+    for root_dir in [path_config.TRAIN_SET_PATH, path_config.TEST_SET_PATH]:
+    #for root_dir in [path_config.TEST_SET_PATH]:
         print "reading data from: ", root_dir
         for (dirpath, dirnames, filenames) in os.walk(root_dir):
             for filename in filenames:
@@ -161,21 +158,31 @@ def process(output_file_path, max_num_artists = 500):
         if len(neighbors) == 0:
             continue
         
+        num_neighbors = len(neighbors)
+        # compute normalized PMI
         log_freq = log(label_freq[id])
-        # normalized PMI
+        log_neighbor_freq = [log(label_freq[neighbors[i]]) \
+                             for i in range(num_neighbors)]
         new_weights = [(log(weights[i]) + log_total_freq \
-                       - log_freq - log(label_freq[neighbors[i]])) / \
+                       - log_freq - log_neighbor_freq[i]) / \
                        (- log(weights[i]) + log_total_freq) \
-                       for i in range(len(neighbors))]
-        # sort by weight in descending order
-        indices = numpy.argsort(new_weights)[::-1]
+                       for i in range(num_neighbors)]
+        
+        if id < tag_id_start:
+            # sort neighbor tags by PMI
+            indices = numpy.argsort(new_weights)[::-1]
+        else:
+            # sort neighbor artists by Frequency
+            indices = numpy.argsort(log_neighbor_freq)[::-1]
+            
         links[id]["n"] = [neighbors[i] for i in indices]
-        links[id]["w"] = [new_weights[i] for i in indices]
+        links[id]["w"] = [round(new_weights[i], 3) for i in indices]
+        
         # sanity check by eyes 0_o
-        if id < tag_id_start and label_freq[id] > 100:
+        if id >= tag_id_start and label_freq[id] > 5000:
             try:
                 print labels[id], len(neighbors)
-                for (i, j) in enumerate(links[id]["n"]): 
+                for (i, j) in enumerate(links[id]["n"][:10]): 
                     print links[id]["w"][i], label_freq[j], labels[j]
                 print "\n"
             except UnicodeEncodeError:
@@ -201,6 +208,6 @@ def process(output_file_path, max_num_artists = 500):
     return None
 
 if __name__ == '__main__':
-    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_500artist_adj_graph.json'
-    process(output_file_path, 500)
+    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_10000artist_adj_graph.json'
+    process(output_file_path, 10000)
     
