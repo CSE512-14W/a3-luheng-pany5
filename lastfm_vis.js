@@ -136,28 +136,27 @@ var updateGraph = function(redraw) {
 	
 	node.append("circle")
 		.attr("r", function(d, i) {
-				return 8;
-				//return node_type[i] == 0 ? 10 : 15;
+				return 10;
 			})
 		.style("fill", function(d, i) {
-				if (centrality[i] == 0) {
+				/*if (centrality[i] == 0) {
 					return "orange";
-				}
+				}*/
 				return node_type[i] == 0 ? "teal" : "purple"; 
 			})
 		.style("opacity", 0.5)
 		.style("stroke", function(d, i) {
-				if (i == 0) {
+				/*if (i == 0) {
 					return "orange";
-				}
+				}*/
 				return node_type[i] == 0 ? "teal" : "purple";
 			})
 		.style("stroke-width", function(d, i) {
 				if (i == 0) {
-					return 18;
+					return 28;
 				}
-				return node_type[i] == 0 ? 1 : 6;
-				//return 1;
+				//return node_type[i] == 0 ? 1 : 3;
+				return 1;
 			});
 	
 	node.on("dblclick", dblclick)
@@ -242,8 +241,12 @@ function dragstart(d) {
 function dblclick(d, i) {
 	d3.select(this)
 		.classed("fixed", d.fixed = false);
-	console.log(labels[i]);
-	pruneGraph(labels[i], 2, 5, 0.01, 20);
+	//console.log(labels[i]);
+	if (node_type[i] == 0) {
+		pruneGraph($.inArray(labels[i], raw_labels), 2, 5, 10, 0.05, 1);
+	} else { 
+		pruneGraph($.inArray(labels[i], raw_labels), 2, 20, 2, 0.05, 1);
+	}
 	updateGraph(true);
 }
 
@@ -331,9 +334,9 @@ function fadeVicinity(d, i) {
 		});
 }
 
-function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
-					min_label_freq) {
-	var node_idx = $.inArray(viewPoint, raw_labels);
+function pruneGraph(node_idx, max_hops, max_artist_fanout, max_tag_fanout,
+					min_weight, min_label_freq) {
+	//var node_idx = $.inArray(viewPoint, raw_labels);
 	labels = [];
 	edges = [];
 	counts = [];
@@ -366,12 +369,16 @@ function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
 		var fanout = 0;
 		var _neighbors = raw_edges[idx].n;
 		var _weights = raw_edges[idx].w;
-		for (var i = 0; i < _neighbors.length && fanout < max_fanout; i++) {
+		for (var i = 0; i < _neighbors.length; i++) {
 			var neighbor = _neighbors[i],
 				weight = _weights[i];
 			if (weight >= min_weight && raw_counts[neighbor] >= min_label_freq) {
 				queue.push({ id:neighbor, depth:dep+1 });
 				fanout += 1;
+				if ((neighbor < num_artists && fanout >= max_artist_fanout) || 
+					(neighbor >= num_artists && fanout >= max_tag_fanout)) {
+					break;
+				}
 			}
 		}
 	}
@@ -396,13 +403,13 @@ function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
 }
 
 //Initialize data
-d3.json("data/lastfm_10000artist_adj_graph");
+d3.json("data/lastfm_10000artist_graph_new");
 raw_labels = graph["labels"],
 raw_edges = graph["links"],
 num_artists = graph["tag_id_start"];
 raw_counts = graph["frequency"];
 
-pruneGraph("rock", 4, 3, 0.15, 200);
+pruneGraph($.inArray("rock", raw_labels), 5, 4, 2, 0.15, 200);
 updateGraph(false);
 
 var tagbox = $("#input_artist").autocomplete({
@@ -410,12 +417,78 @@ var tagbox = $("#input_artist").autocomplete({
 		//messages: { noResults: '', results: function() {} 
 	}).keyup(function(e) {
 		if(e.which == 13) {
-			pruneGraph($(this).val(), 2, 10, 0.15, 1);
+			var label_idx = $.inArray($(this).val(), raw_labels);
+			if (label_idx < num_artists) { 
+				pruneGraph(label_idx, 2, 5, 10, 0.05, 1);
+			} else {
+				pruneGraph(label_idx, 2, 20, 2, 0.05, 1);
+			}
 			updateGraph(true);
 		}
 	});
 
+/*
+var tooltip =  $(function() {
+    $( document ).tooltip({
+        items: "img, [data-geo], [title]",
+        content: function() {
+          var element = $( this );
+          if ( element.is( "[data-geo]" ) ) {
+            var text = element.text();
+            return "<img class='map' alt='" + text +
+              "' src='http://maps.google.com/maps/api/staticmap?" +
+              "zoom=11&size=350x350&maptype=terrain&sensor=false&center=" +
+              text + "'>";
+          }
+          if ( element.is( "[title]" ) ) {
+            return element.attr( "title" );
+          }
+          if ( element.is( "img" ) ) {
+            return element.attr( "alt" );
+          }
+        }
+      });
+    });
+*/
 
+$(document).tooltip({
+	items: "#help_icon, #info_icon",
+	content: function() {
+		var element = $(this);
+		if (element.is("#help_icon")) {
+			return "<h3> To explore artists and their tags, " + 
+	         "double-click on the nodes or type in search box (e.g. britpop or coldplay); </h3>" + 
+	         "<h3> Mouse over to hightlight nodes and surrounding edges. </h3>" + 
+	         "<h3> For best visual effect, reset browser zoom to default. </h3>";
+		} else if (element.is("#info_icon")) {
+			return "<h3> Last.fm dataset, " +
+	        "the official song tags and song similarity collection for the Million Song Dataset, </h3>" +
+	        "<h3> available at: http://labrosa.ee.columbia.edu/millionsong/lastfm </h3>";
+		}
+	}
+});
+
+var legends = d3.select("#legend").append("svg")
+	.attr("width", 250)
+	.attr("height", 30)
+	.style("margin", "auto");
+
+var leg1 = legends.append("circle").attr("r", 10).attr("cx", 15).attr("cy", 18);
+var legtext1 = legends.append("text").text("artist").attr("x", 30).attr("y", 24);
+
+var leg2 = legends.append("circle").attr("r", 10).attr("cx", 95).attr("cy", 18);
+var legtext2 = legends.append("text").text("user added tag").attr("x", 110).attr("y", 24);
+leg1.style("fill", "teal").style("opacity", 0.5);
+leg2.style("fill", "purple").style("opacity", 0.5);
+legtext1.style("font-size", 16)
+		.style("font-family", "Helvetica")
+		.style("font-weight", "bold")
+		.style("fill", d3.rgb("teal").darker());
+legtext2.style("font-size", 16)
+	.style("font-family", "Helvetica")
+	.style("font-weight", "bold")
+	.style("fill", d3.rgb("purple").darker());
+		
 //brushing directly on the graph?
 //TODO: make this work....
 //ref: http://bl.ocks.org/mbostock/4560481

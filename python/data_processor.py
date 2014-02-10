@@ -22,9 +22,9 @@ def get_unique_tags(tag_file_path, tag_freq_cutoff = 3000):
     with open(tag_file_path, 'r') as input_file:
         for line in input_file:
             info = line.strip().split()
-            if len(info) > 5:
-                continue
             tag = " ".join([t.strip().lower() for t in info[:len(info)-1]])
+            if len(info) > 5 or tag.isdigit():
+                continue
             freq = int(info[len(info)-1])
             if tag in TAG_WHITELIST or \
              (freq >= tag_freq_cutoff and not tag in TAG_BLACKLIST):    
@@ -211,6 +211,6 @@ def process(output_file_path, max_num_artists = 500):
     return None
 
 if __name__ == '__main__':
-    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_10000artist_adj_graph.json'
+    output_file_path = path_config.CLEANED_DATA_PATH + '/lastfm_10000artist_graph_new.json'
     process(output_file_path, 10000)
     

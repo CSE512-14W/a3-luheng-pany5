@@ -5,8 +5,8 @@
   <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-  <script type="text/javascript" src="data/lastfm_10000artist_adj_graph.json"></script>
-  
+  <script type="text/javascript" src="data/lastfm_10000artist_graph_new.json"></script>
+ 
   <title> Explore Your Music! </title>
 </head>
 
@@ -23,12 +23,19 @@
   transition: all 0.3s ease-out;
 }
 
+.ui-autocomplete {
+  height: 150px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .ui-menu {
   list-style:none;
   padding: 2px;
   margin: 0;
   display:block;
   float: left;
+  background-color: white;
 }
 .ui-menu .ui-menu {
   margin-top: -3px;
@@ -42,11 +49,11 @@
   width: 100%;
 }
 .ui-menu .ui-menu-item a {
-  text-decoration:none;
   display:block;
   padding:.2em .4em;
-  line-height:1.5;
-  zoom:1;
+  line-height:1.0;
+  width: 100%;
+  zoom:1;  
 }
 .ui-menu .ui-menu-item a.ui-state-hover,
 .ui-menu .ui-menu-item a.ui-state-active {
@@ -57,14 +64,39 @@
 .ui-helper-hidden-accessible {
   display:none; 
 }
-  
+
+.ui-tooltip {
+  padding: 8px;
+  position: absolute;
+  z-index: 9999;
+  max-width: 500px;
+  -webkit-box-shadow: 0 0 5px #aaa;
+  box-shadow: 0 0 5px #aaa;
+  background-color: white;
+  font-family: "Helvetica";
+  font-size: 12;
+}
+
+body {
+    font-size: 12px;
+    font-family : "Helvetica";
+}
+
+p {
+    white-space: nowrap; 
+}
+   
 </style>
 
 <body>
   <div id="header" style="float:top; height:15%; text-align:center">
     <h1> Explore Your Music! </h1>
     <div style="align:center">
-     <input title="search an artist name!" id="input_artist" class="autocomp-input">
+        <div id="legend">
+	        <img id="help_icon" src="images/help-icon.png" width=24 height=24 style="padding-right 20px;">
+	        <img id="info_icon" src="images/info-icon.png" width=24 height=24 >
+        </div>
+     <input id="input_artist" class="autocomp-input"> 
      </div>
   </div>
   
