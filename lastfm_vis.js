@@ -1,5 +1,5 @@
-var width = 1000;
-var height = 800;
+var width = window.innerWidth;// 1000;
+var height = window.innerHeight * 0.75; // 800;
 var labelDistance = 0;
 
 var vis = d3.select("#content")
@@ -13,6 +13,7 @@ var link,
 	node, 
 	anchorLink,
 	anchorNode,
+	anchorText,
 	force,
 	force2,
 	drag;
@@ -97,7 +98,7 @@ var updateGraph = function(redraw) {
 	  })
 	  .charge(-3000)
 	  .linkStrength( function(d) {
-	  	  return d.weight * 10;
+	  	  return d.weight < 0.1 ? 0 : 0.5;
 	  });
 	
 	force.start();
@@ -122,10 +123,10 @@ var updateGraph = function(redraw) {
 			.attr("class", "link");
 
 	link.style("stroke-width", function(d) {
-			return d.weight * 5;
+			return d.weight * 8;
 		})
 		.style("stroke", "grey")
-		.style("opacity", 0.3);
+		.style("opacity", 0.2);
 
 	node = vis.selectAll("g.node")
 			.data(force.nodes())
@@ -135,7 +136,7 @@ var updateGraph = function(redraw) {
 	
 	node.append("circle")
 		.attr("r", function(d, i) {
-				return 10;
+				return 8;
 				//return node_type[i] == 0 ? 10 : 15;
 			})
 		.style("fill", function(d, i) {
@@ -144,12 +145,19 @@ var updateGraph = function(redraw) {
 				}
 				return node_type[i] == 0 ? "teal" : "purple"; 
 			})
-		.style("opacity", 0.6)
+		.style("opacity", 0.5)
 		.style("stroke", function(d, i) {
-				return centrality[i] == 0 ? "yellow" : "#FFF";
+				if (i == 0) {
+					return "orange";
+				}
+				return node_type[i] == 0 ? "teal" : "purple";
 			})
 		.style("stroke-width", function(d, i) {
-				return centrality[i] == 0 ? 5 : 1;
+				if (i == 0) {
+					return 18;
+				}
+				return node_type[i] == 0 ? 1 : 6;
+				//return 1;
 			});
 	
 	node.on("dblclick", dblclick)
@@ -174,13 +182,26 @@ var updateGraph = function(redraw) {
 		.style("fill", "#FFF")
 		.style("opacity", 0);
 	
-	anchorNode.append("text")
+	anchorText = anchorNode.append("text")
 		.text(function(d, i) {
 			return i % 2 == 0 ? "" : d.node.label;
 		})
-		.style("fill", "black")
+		.attr("class", "anchorText");
+	
+	anchorText.style("fill", "black")
 		.style("font-family", "Helvetica")
-		.style("font-size", 13);
+		.style("fill", function(d, i) {
+			return node_type[(i-1)/2] == 0 ?
+					d3.rgb("teal").darker(10) :
+					d3.rgb("purple").darker(10);
+		})
+		.style("font-size", function(d, i) {
+			return i == 1 ? 20 : 13;
+		})
+		.style("font-weight", function(d, i) {
+			return i == 1 ? "bold" : "normal";
+		});
+		//.style("background-color", "grey");
 	
 	/*
 	anchorNode
@@ -248,28 +269,36 @@ function highlightVicinity(node_d, node_i) {
 		.transition()
 		.duration(300)
 		.attr("r", 20);
-	
-	/*
-	node.transition()
-		.duration(300)
-		.style("fill", function(d, i) {
-			if (i == node_i) {
-				return "orange";
-			}
-			return oneHopAway(i, node_i) ? "pink" : "grey";
-		});
-	*/
+
 	// highlight link
 	link.transition()
 		.duration(300)
 		.style("stroke-width", function(d) {
-			return isLinkedTo(d, node_d) ? d.weight * 15 : d.weight * 5;
+			return isLinkedTo(d, node_d) ? d.weight * 24 : d.weight * 8;
 		})
 		.style("stroke", function(d) {
 			return isLinkedTo(d, node_d) ? "gold" : "grey";
 		})
 		.style("opacity", function(d) {
-			return isLinkedTo(d, node_d) ? 0.8 : 0.3;
+			return isLinkedTo(d, node_d) ? 0.6 : 0.2;
+		});
+	
+	// change font
+	anchorText.transition()
+		.duration(300)
+		.style("fill", "black")
+		.style("font-family", "Helvetica")
+		.style("font-size", function(d, i) {
+			if (i == 1) {
+				return 20;
+			}
+			return i == 2 * node_i + 1 ? 20 : 13;
+		})
+		.style("font-weight", function(d, i) {
+			if (i == 1) {
+				return "bold";
+			}
+			return i == 2 * node_i + 1 ? "bold" : "normal";
 		});
 }
 
@@ -283,28 +312,23 @@ function fadeVicinity(d, i) {
 	link.transition()
 		.duration(300)
 		.style("stroke-width", function(d) {
-			return d.weight * 5;
+			return d.weight * 8;
 		})
 		.style("stroke", "grey")
 		.style("opacity", function(d) {
-			return 0.3;
+			return 0.2;
 		});
-}
-
-function anchorMouseover(d, i) {
-	d3.select(this)
-		.transition()
+	
+	anchorText.transition()
 		.duration(300)
-		.select("text")
-	    .attr("font-size", 20);
-}
-
-function anchorMouseout(d, i) {
-	d3.select(this)
-		.transition()
-		.duration(300)
-		.select("text")
-	    .attr("font-size", 13);
+		.style("fill", "black")
+		.style("font-family", "Helvetica")
+		.style("font-size", function(d, i) {
+			return i == 1 ? 20 : 13;
+		})
+		.style("font-weight", function(d, i) {
+			return i == 1 ? "bold" : "normal";
+		});
 }
 
 function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
@@ -369,7 +393,6 @@ function pruneGraph(viewPoint, max_hops, max_fanout, min_weight,
 			}
 		}
 	}
-	//alert(labels.length + ", " + edges.length);
 }
 
 //Initialize data
@@ -379,7 +402,7 @@ raw_edges = graph["links"],
 num_artists = graph["tag_id_start"];
 raw_counts = graph["frequency"];
 
-pruneGraph("rock", 6, 3, 0.15, 200);
+pruneGraph("rock", 4, 3, 0.15, 200);
 updateGraph(false);
 
 var tagbox = $("#input_artist").autocomplete({
