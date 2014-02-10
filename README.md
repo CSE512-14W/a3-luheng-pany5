@@ -18,9 +18,12 @@ Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/
 
 ![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig1.png)
 
-![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig2.png)
 
 In Figure 1, a dot means a song track and a circle means a tag name. A track with many tags will be listed in the middle and linked with each tag name through edges. We used various colors to differentiate top 10 most popular tag nodes for a specific artist. When users click a track, it will highlight its associated tags, display the track title and start to play the track. In the bottom, it shows the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist in search. 
+
+
+![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig2.png)
+
 
 In Figure 2, it shows some popular artists and similar tags for one or more selected tags. Here a dot means an artist and a circle means a tag name. When searching for some tags, artists connected with at least one selected tag will get highlighted. When mousing over an artist, it will display the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist. 
 
@@ -31,9 +34,13 @@ We made two major changes between the storyboard and the final visualization. Fi
 ## Final Visualization
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.41.53%20PM.png)
+
+
 Move mouse over the icons on top of the page to see information about how to play with the visualization.
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.22.30%20PM.png)
+
+
 Type artist name in the search box or double-click on nodes to see related tags and similar artists on the network. Move mouse over nodes to highlight part of the graph.
 
 
