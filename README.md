@@ -41,17 +41,17 @@ We brainstormed potential topics and searched for datasets together. After we ch
 Learning d3 and implementing the network visualization with event handlers took us most of time.
 
 ### Techniques
-####Data Processing
-- Python, scipy and numpy
-- Data Wrangler
-- nPMI (Normalized Point-wise Mutual Information)
-#### Visualization
-- Javascript and jQuery
-- d3.js
-- Force-Directed Graph in d3.js
-- Search artist and tag name with auto-completion support (jQuery UI)
-- Interaction by dragging, double-clicking and hover
-- Graph Pruning by BFS (breadth-first search)
+- Data Processing
+  - Python, scipy and numpy
+  - Data Wrangler
+  - nPMI (Normalized Point-wise Mutual Information)
+- Visualization
+  - Javascript and jQuery
+  - d3.js
+  - Force-Directed Graph in d3.js
+  - Search artist and tag name with auto-completion support (jQuery UI)
+  - Interaction by dragging, double-clicking and hover
+  - Graph Pruning by BFS (breadth-first search)
 
 ## Techinical Challenge
 
@@ -63,7 +63,7 @@ Learning d3 and implementing the network visualization with event handlers took 
 
 
 ## References
-[1] The Million Song Dataset, T. Bertin-Mahieux, D. Ellis, B. Whitman and P. Lamere, ISMIR '11
-[2] The Million Song Dataset Challenge, B. McFee, T. Bertin-Mahieux, D. Ellis and G. Lanckriet, AdMIRe '12
-[3] Data-Driven Documents, http://d3js.org/, Mike Bostock
+- [1] The Million Song Dataset, T. Bertin-Mahieux, D. Ellis, B. Whitman and P. Lamere, ISMIR '11
+- [2] The Million Song Dataset Challenge, B. McFee, T. Bertin-Mahieux, D. Ellis and G. Lanckriet, AdMIRe '12
+- [3] Data-Driven Documents, http://d3js.org/, Mike Bostock
 
