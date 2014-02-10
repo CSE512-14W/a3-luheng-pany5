@@ -38,11 +38,11 @@ Move mouse over the icons on top of the page to see information about how to pla
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.41.53%20PM.png)
 
-Type artist name in the search box or double-click on nodes to see related tags and similar artists on the network. Move mouse over nodes to highlight part of the graph.
+Type artist name in the search box or double-click on nodes to see most relevant tags and similar artists on the network. Move mouse over nodes to highlight part of the graph.
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.22.30%20PM.png)
 
-Double-click on the "trance" node to see a new network showing all the related bands and tags/subgenres ... and keep exploring!
+Double-click on the "trance" node to see a new network showing the most relevant bands and tags/subgenres ... and keep exploring!
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/trance.png)
 
@@ -92,8 +92,9 @@ The tags from the Last.fm dataset are added by listeners, which are noisy and he
 We deal with this problem by using blacklisting and whitelisting. We created a blacklist for meaningless tags as mentioned above. On the other hand, we created a whitelist for tags including all the music genres fetched from other data sources to improve tag quality in general. Tags in the whitelist are included in the final dataset regardless of their frequency.
 
 ### Relevance-Popularity Trade-off of Artists
+With simple counting on the raw data, we can get co-occurrence information about how many times a musician get labeled with a certain tag. We use nPMI (normalized point-wise mutual information, http://en.wikipedia.org/wiki/Pointwise_mutual_information) to get a more accurate measurement about the relevance between an artist and a tag. However, if we use nPMI as the only criteria of showing similar artists/tags, then lots of low-popularity artists will show-up. On the other hand, if we only rank artists by their popularity, then we will see Britney Spears in every sub-network!
 
-
+To solve this problem, for each tag, we rank artists by their relevance and popularity seperately, getting two different rankings. Then we sort the artists based on their position in these two different rankings. From the final visualization, we found this a very good trade-off method between artist relevance and popularity.
 
 
 ## References
