@@ -107,7 +107,7 @@ The tags from the Last.fm dataset are added by listeners, which are noisy and he
 
 We deal with this problem by using blacklisting and whitelisting. We created a blacklist for meaningless tags as mentioned above. On the other hand, we created a whitelist for tags including all the music genres fetched from other data sources to improve tag quality in general. Tags in the whitelist are included in the final dataset regardless of their frequency.
 
-### Relevance-Popularity Trade-off of Artists
+### Relevance-Popularity Trade-off
 With simple counting on the raw data, we can get co-occurrence information about how many times a musician get labeled with a certain tag. We use nPMI (normalized point-wise mutual information, http://en.wikipedia.org/wiki/Pointwise_mutual_information) to get a more accurate measurement about the relevance between an artist and a tag. However, if we use nPMI as the only criteria of showing similar artists/tags, then lots of low-popularity artists will show-up. On the other hand, if we only rank artists by their popularity, then we will see Britney Spears in every sub-network!
 
 To solve this problem, for each tag, we rank artists by their relevance and popularity seperately, getting two different rankings. Then we sort the artists based on their position in these two different rankings. From the final visualization, we found this a very good trade-off method between artist relevance and popularity.
