@@ -20,6 +20,8 @@ We are inspired by Google’s Music Timeline from Google Play Music, available a
 
 The Music Timeline “shows genres of music waxing and waning” from 1950 to 2010. The visualization focuses on different music genres and shows each genre’s popularity change over the past half a century. However, it tells little about users’ experience and feedback for listening to different types of music. This idea inspired us to design a dynamic music network, where people can freely explore the interaction between artists and user-added tags. Our original goal of the web visualization was to enable users to search for an artist’s most popular tags and similar artists.  Meanwhile, users can search for some most popular artists meeting the criteria of a specific tag or a combination of tags, such as music genre, emotion, and nationality. 
 
+Below are our storyboard sketches. 
+
 
 ![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig1.png)
 
@@ -34,7 +36,7 @@ In Figure 2, it shows some popular artists and similar tags for one or more sele
 
 Initially, we planned to incorporate track title information in the visualization. Because we couldn’t find the audio hyperlinks for song tracks, we dropped our original design of displaying song titles and playing songs, along with network exploration. Instead, we focused on designing a web visualization that enabled users to fully explore the interaction between artists and their tags. Through search, click, or move mouse over, users can rearrange the complete musician-tag network and zoom to a subgraph with their interest. 
 
-In order to help users play with our web visualization, we placed two instruction icons on top of the musician-tag network. The question icon shows how to play with the visualization and some suggestions on achieving the best visual effect. The information icon shows the dataset source. 
+In order to help users play with our web visualization, we placed two instruction icons on top of the musician-tag network. The question icon shows how to play with the visualization and achieve the best visual effect. The information icon shows the dataset source. 
 
 
 ### Changes between Storyboard and the Final Implementation
