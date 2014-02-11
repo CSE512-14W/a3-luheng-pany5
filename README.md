@@ -6,9 +6,8 @@ a3-luheng-pany5
 1. Luheng He luheng@uw.edu
 2. Yi Pan pany5@uw.edu
 
-## Project Name
-"Explore Your Musicians!"
-This interactive web application allows users to search, click and explore thousands of musicians and their related tags via a musician-tag relevance network. The visualization uses a large subset of the Million Song Last.fm dataset (http://labrosa.ee.columbia.edu/millionsong/), including 10,000 most popular artists and about 400 user-added tags.
+## Explore Your Musicians!
+This interactive web application allows users to search, click and explore thousands of musicians and their related tags via a musician-tag relevance network. The visualization uses a large subset of the Million Song Last.fm dataset (http://labrosa.ee.columbia.edu/millionsong/), including 10,000 most popular artists and about 400 user-added tags. Artists are connected to a tag if they have a song on Last.fm that is labeled with that tag. Edges have different width, representing how strong the correlation is. The network is pruned based on both relevance and popularity of the artist/tag, showing the information that users care about the most.
 
 ## Running Instructions
 
