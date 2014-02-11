@@ -7,11 +7,7 @@ a3-luheng-pany5
 2. Yi Pan pany5@uw.edu
 
 ## Explore Your Musicians!
-This interactive web application allows users to search, click and explore thousands of musicians and their related tags via a musician-tag relevance network. The visualization uses a large subset of the Million Song Last.fm dataset (http://labrosa.ee.columbia.edu/millionsong/), including 10,000 most popular artists and about 400 user-added tags.
-
-![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/preview.png)
-
-Artists are connected to a tag if they have a song on Last.fm that is labeled with that tag. Edges have different width, representing how strong the correlation is. The network is pruned based on both relevance and popularity of the artist/tag, showing the information that users care about the most.
+This interactive web application allows users to search, click and explore thousands of musicians and their related tags via a musician-tag relevance network. The visualization uses a large subset of the Million Song Last.fm dataset (http://labrosa.ee.columbia.edu/millionsong/), including 10,000 most popular artists and about 400 user-added tags. Artists are connected to a tag if they have a song on Last.fm that is labeled with that tag. Edges have different width, representing how strong the correlation is. The network is pruned based on both relevance and popularity of the artist/tag, showing the information that users care about the most.
 
 ## Running Instructions
 
@@ -21,7 +17,7 @@ Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/
 
 We are inspired by Google’s Music Timeline from Google Play Music, available at http://research.google.com/bigpicture/music/#.
 
-The Music Timeline “shows genres of music waxing and waning” from 1950 to 2010. The visualization focuses on different music genres and shows each genre’s popularity change over the past half a century. However, it tells little about users’ experience and feedback for listening to different types of music. This idea inspired us to design a dynamic music network, where people can freely explore the interaction between artists and user-added tags. Our original goal of the web visualization was to enable users to search for an artist’s most popular tags and similar artists.  Meanwhile, users can search for some most popular artists meeting the criteria of a specific tag or a combination of tags, such as music genre, emotion, and nationality. 
+The Music Timeline “shows genres of music waxing and waning” from 1950 to 2010. The visualization focuses on different music genres and shows each genre’s popularity over the past half a century. However, it tells little about users’ experiences and feedbacks for listening to different types of music. This idea inspired us to design a dynamic music network, where people can freely explore the interaction between artists and user-added tags. Our original goal of the web visualization was to enable users to search for an artist’s most popular tags and similar artists.  Meanwhile, users can search for some most popular artists meeting the criteria of a specific tag or a combination of tags, such as music genre, emotion, and nationality. 
 
 Below are our storyboard sketches. 
 
@@ -29,7 +25,7 @@ Below are our storyboard sketches.
 ![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig1.png)
 
 
-In Figure 1, a dot means a song track and a circle means a tag name. A track with many tags will be listed in the middle and linked with each tag name through edges. We used various colors to differentiate top 10 most popular tag nodes for a specific artist. When users click a track, it will highlight its associated tags, display the track title and start to play the track. In the bottom, it shows the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist in search. 
+In Figure 1, it shows some user-added tags for a searched artist. Here a dot means a song track and a circle means a tag name. A track with many tags will be listed in the middle and linked with each tag name through edges. We used various colors to differentiate top 10 most popular tag nodes for a specific artist. When users click a track, it will highlight its associated tags, display the track title and start to play the track. In the bottom, it shows the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist in search. 
 
 
 ![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig2.png)
@@ -72,9 +68,9 @@ We brainstormed potential topics and searched for datasets together. After we ch
   -	Algorithm for Graph Construction				      (2 hours)
   -	Tech part of the write-up					            (3 hours)
 - Yi Pan
-  -	design storyboard sketches				            (2 hours)
-  -	study data domain and data wrangling 		    	(3 hours)
-  - draft the write-up                    				(4 hours)
+  -	Design storyboard sketches				            (2 hours)
+  -	Study data domain and data wrangling 		    	(3 hours)
+  - Draft the write-up                    				(4 hours)
 
 Learning d3 and implementing the network visualization with event handlers took us most of time.
 
