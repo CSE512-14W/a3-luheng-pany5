@@ -7,21 +7,21 @@ a3-luheng-pany5
 2. Yi Pan pany5@uw.edu
 
 ## Explore Your Musicians!
-This interactive web application allows users to search, click and explore thousands of musicians and their related tags via a musician-tag relevance network. The visualization uses a large subset of the Million Song Last.fm dataset (http://labrosa.ee.columbia.edu/millionsong/), including 10,000 most popular artists and about 400 user-added tags. 
+This interactive web application allows users to search and explore thousands of musicians and their related tags via a musician-tag relevance network. The visualization uses a large subset of the Million Song Last.fm dataset (http://labrosa.ee.columbia.edu/millionsong/), including 10,000 most popular artists and about 400 user-added tags. 
  
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/preview.png)
 
-Artists are connected to a tag if they have a song on Last.fm that is labeled with that tag. Edges have different width, representing how strong the correlation is. The network is pruned based on both relevance and popularity of the artist/tag, showing the information that users care about the most.
+Artists are represented by teal nodes and tags are represented by purple nodes. An artist is connected to a tag if the artist has a song on Last.fm that is labeled with that tag. The edge width represents the degree of correlation between the artist and the tag. The network is pruned based on both the relevance and popularity of the artist/tag in order to display only the information that users care about the most.
 
 ## Running Instructions
 
-Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/ (It loads a 9MB JSON file so might be a bit slow at the first time).
+Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/ (It loads a 9MB JSON file so the page load might be slow).
 
 ## Storyboard
 
 We are inspired by Google’s Music Timeline from Google Play Music, available at http://research.google.com/bigpicture/music/#.
 
-The Music Timeline “shows genres of music waxing and waning” from 1950 to 2010. The visualization focuses on different music genres and shows each genre’s popularity over the past half a century. However, it tells little about users’ experiences and feedbacks for listening to different types of music. This idea inspired us to design a dynamic music network, where people can freely explore the interaction between artists and user-added tags. Our original goal of the web visualization was to enable users to search for an artist’s most popular tags and similar artists.  Meanwhile, users can search for some most popular artists meeting the criteria of a specific tag or a combination of tags, such as music genre, emotion, and nationality. 
+The Music Timeline “shows genres of music waxing and waning” from 1950 to 2010. Their visualization focuses on different music genres and shows how each genre’s popularity evolve for the past half a century. However, it conveys little about users’ experiences and feedbacks for different types of music. We decide to design a dynamic music network, where people can freely explore the interaction between artists and user-added tags. Our original goal of the web visualization is to enable users to search for an artist’s most popular tags and discover similar artists.  Currently, users can search for popular artists associated with a specific tag or a combination of tags, such as music genre, emotion, and nationality. 
 
 Below are our storyboard sketches. 
 
@@ -29,13 +29,13 @@ Below are our storyboard sketches.
 ![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig1.png)
 
 
-In Figure 1, it shows some user-added tags for a searched artist. Here a dot means a song track and a circle means a tag name. A track with many tags will be listed in the middle and linked with each tag name through edges. We used various colors to differentiate top 10 most popular tag nodes for a specific artist. When users click a track, it will highlight its associated tags, display the track title and start to play the track. In the bottom, it shows the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist in search. 
+In Figure 1, it shows some user-added tags for an artist. A dot represents a song track and a circle represents a tag name. A track with many tags will be listed in the middle and linked with each tag name through edges. We used various colors to differentiate top 10 most popular tag nodes for a specific artist. When users click a track, it will highlight its associated tags, display the track title and start to play the track. In the bottom, it shows the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist in search. 
 
 
 ![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig2.png)
 
 
-In Figure 2, it shows some popular artists and similar tags for one or more selected tags. Here a dot means an artist and a circle means a tag name. When searching for some tags, artists connected with at least one selected tag will get highlighted. When mousing over an artist, it will display the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist. 
+In Figure 2, it shows some popular artists and similar tags for one or more selected tags. A dot represents an artist and a circle represents a tag name. When searching for some tags, artists connected with at least one selected tag will get highlighted. When mousing over an artist, it will display the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist. 
 
 Initially, we planned to incorporate track title information in the visualization. Because we couldn’t find the audio hyperlinks for song tracks, we dropped our original design of displaying song titles and playing songs, along with network exploration. Instead, we focused on designing a web visualization that enabled users to fully explore the interaction between artists and their tags. Through search, click, or move mouse over, users can rearrange the complete musician-tag network and zoom to a subgraph with their interest. 
 
@@ -44,21 +44,21 @@ In order to help users play with our web visualization, we placed two instructio
 
 ### Changes between Storyboard and the Final Implementation
 
-We made one major change between the storyboard and the final visualization.  We dropped the original design of displaying song titles, showing song and tag aggregate information, and playing songs, because of lacking the audio hyperlinks for song tracks. Instead, we combined two storyboard sketches into one dynamic musician-tag network, where musicians and their tags are connected. Two icons are offered on the web application to aid users to better play with our visualizaiton. 
+We made one major change between the storyboard and the final visualization.  We dropped the original design of displaying song titles, showing song and tag aggregate information, and playing songs, because we lack the audio hyperlinks for song tracks. Instead, we combined two storyboard sketches into one dynamic musician-tag network, where musicians and their tags are connected. Two icons are offered on the web application to aid users to better play with our visualizaiton. 
 
 
 ## Final Visualization
 
 
-Move mouse over the icons on top of the page to see information about how to play with the visualization.
+Hover mouse over icons on top of the page to learn usage tips for the visualization.
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.41.53%20PM.png)
 
-Type artist name in the search box or double-click on nodes to see most relevant tags and similar artists on the network. Move mouse over nodes to highlight part of the graph.
+Type artist name in the search box or double-click on nodes on display to see the most relevant tags and similar artists in the network. Hover mouse over nodes to highlight the relevant subgraph.
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/Screen%20Shot%202014-02-10%20at%201.22.30%20PM.png)
 
-Double-click on the "trance" node to see a new network showing the most relevant bands and tags/subgenres ... and keep exploring!
+For instance, double-click on the "trance" node to see a new network showing the most relevant bands and tags/subgenres ... and keep exploring!
 
 ![alt tag](https://raw.github.com/CSE512-14W/a3-luheng-pany5/master/writeup/trance.png)
 
@@ -67,14 +67,14 @@ Double-click on the "trance" node to see a new network showing the most relevant
 
 We brainstormed potential topics and searched for datasets together. After we chose our dataset and discussed the initial visualization design and interactive technique, we split the work roughly as follows,
 - Luheng He
-  -	Data processing and preparation				        (3 hours) 	
-  -	Design and Coding for Visualization			      (16 hours)
-  -	Algorithm for Graph Construction				      (2 hours)
-  -	Tech part of the write-up					            (3 hours)
+  - Data processing and preparation               (3 hours)   
+  - Design and Coding for Visualization           (16 hours)
+  - Algorithm for Graph Construction              (2 hours)
+  - Tech part of the write-up                     (3 hours)
 - Yi Pan
-  -	Design storyboard sketches				            (2 hours)
-  -	Study data domain and data wrangling 		    	(3 hours)
-  - Draft the write-up                    				(4 hours)
+  - Design storyboard sketches                    (2 hours)
+  - Study data domain and data wrangling          (3 hours)
+  - Draft the write-up                            (4 hours)
 
 Learning d3 and implementing the network visualization with event handlers took us most of time.
 
@@ -114,7 +114,6 @@ To solve this problem, for each tag, we rank artists by their relevance and popu
 
 
 ## References
-- [1] The Million Song Dataset, T. Bertin-Mahieux, D. Ellis, B. Whitman and P. Lamere, ISMIR '11
-- [2] The Million Song Dataset Challenge, B. McFee, T. Bertin-Mahieux, D. Ellis and G. Lanckriet, AdMIRe '12
+- [1] The Million Song Dataset, T. Bertin-Mahieux, D. Ellis, B. Whitman and P. Lamere, ISMIR '11
+- [2] The Million Song Dataset Challenge, B. McFee, T. Bertin-Mahieux, D. Ellis and G. Lanckriet, AdMIRe '12
 - [3] Data-Driven Documents, http://d3js.org/, Mike Bostock
-
