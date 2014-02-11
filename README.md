@@ -16,6 +16,11 @@ Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/
 
 ## Storyboard
 
+We are inspired by Google’s Music Timeline from Google Play Music, available at http://research.google.com/bigpicture/music/#.
+
+The Music Timeline “shows genres of music waxing and waning” from 1950 to 2010. The visualization focuses on different music genres and shows each genre’s popularity change over the past half a century. However, it tells little about users’ experience and feedback for listening to different types of music. This idea inspired us to design a dynamic music network, where people can freely explore the interaction between artists and user-added tags. Our original goal of the web visualization was to enable users to search for an artist’s most popular tags and similar artists.  Meanwhile, users can search for some most popular artists meeting the criteria of a specific tag or a combination of tags, such as music genre, emotion, and nationality. 
+
+
 ![alt tag](https://github.com/CSE512-14W/a3-luheng-pany5/raw/master/writeup/fig1.png)
 
 
@@ -27,9 +32,15 @@ In Figure 1, a dot means a song track and a circle means a tag name. A track wit
 
 In Figure 2, it shows some popular artists and similar tags for one or more selected tags. Here a dot means an artist and a circle means a tag name. When searching for some tags, artists connected with at least one selected tag will get highlighted. When mousing over an artist, it will display the number of tracks listened to and the number of unique tag names tracked by last.fm users for this artist. 
 
+Initially, we planned to incorporate track title information in the visualization. Because we couldn’t find the audio hyperlinks for song tracks, we dropped our original design of displaying song titles and playing songs, along with network exploration. Instead, we focused on designing a web visualization that enabled users to fully explore the interaction between artists and their tags. Through search, click, or move mouse over, users can rearrange the complete musician-tag network and zoom to a subgraph with their interest. 
+
+In order to help users play with our web visualization, we placed two instruction icons on top of the musician-tag network. The question icon shows how to play with the visualization and some suggestions on achieving the best visual effect. The information icon shows the dataset source. 
+
+
 ### Changes between Storyboard and the Final Implementation
 
-We made two major changes between the storyboard and the final visualization. Firstly, we planned to incorporate track title information in the storyboard visualization. Because we couldn’t find the audio hyperlinks for the song tracks, we gave up our original design of displaying song titles and playing songs, along with network exploration. Secondly, we added on the feature of finding similar artists in the final visualization. Since the dataset includes similar tracks for each track, we also computed the relevance between artists and tags by normalized PMI (point-wise mutual information), which helped find some similar artists to the selected artist.
+We made one major change between the storyboard and the final visualization.  We dropped the original design of displaying song titles, showing song and tag aggregate information, and playing songs, because of lacking the audio hyperlinks for song tracks. Instead, we combined two storyboard sketches into one dynamic musician-tag network, where musicians and their tags are connected. Two icons are offered on the web application to aid users to better play with our visualizaiton. 
+
 
 ## Final Visualization
 
