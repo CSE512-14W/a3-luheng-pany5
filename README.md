@@ -93,7 +93,7 @@ Learning d3 and implementing the network visualization with event handlers took 
 
 ## Techinical Challenge
 
-### Big Data
+### Large Amount of Data
 The Last.fm Million Song dataset (http://labrosa.ee.columbia.edu/millionsong/lastfm) contains 943,347 tracks, 522,366 unique user-add tags and more than 44,745 unique artists [1]. Each data entry contains a song, with information about its title, artist, user-add tags and a set of similar tracks. This dataset is significantly larger than any datasets we used for past assignments (i.e., the IMDB movie datasets with 3000 movies). To visualize this dataset, we need to make the correct design choices on the following aspects:
 - Choosing a reasonable level of abstraction
 - Selecting a subset of the data that people care about.
