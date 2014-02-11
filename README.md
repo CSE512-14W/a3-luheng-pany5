@@ -15,7 +15,7 @@ Artists are connected to a tag if they have a song on Last.fm that is labeled wi
 
 ## Running Instructions
 
-Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/ (It loads a 9MB json file so might be a bit slow at the first time).
+Access our visualization at http://cse512-14w.github.io/a3-luheng-pany5/ (It loads a 9MB JSON file so might be a bit slow at the first time).
 
 ## Storyboard
 
