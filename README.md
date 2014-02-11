@@ -65,7 +65,7 @@ For instance, double-click on the "trance" node to see a new network showing the
 
 ## Development Process
 
-We brainstormed potential topics and searched for datasets together. After we chose our dataset and discussed the initial visualization design and interactive technique, we split the work roughly as follows,
+We brainstormed on potential topics and searched for datasets together. After we chose our dataset and discussed the initial visualization design and interactive technique, we split the work roughly as follows,
 - Luheng He
   - Data processing and preparation               (3 hours)   
   - Design and Coding for Visualization           (16 hours)
@@ -76,7 +76,7 @@ We brainstormed potential topics and searched for datasets together. After we ch
   - Study data domain and data wrangling          (3 hours)
   - Draft the write-up                            (4 hours)
 
-Learning d3 and implementing the network visualization with event handlers took us most of time.
+Learning d3 and implementing the network visualization with event handlers took the most of our time.
 
 ### Techniques
 - Data Processing
@@ -100,7 +100,7 @@ The Last.fm Million Song dataset (http://labrosa.ee.columbia.edu/millionsong/las
 
 Therefore, we changed the dataset from track-level to artist-level. Instead of computing co-occurrence between tags and songs, we compute the co-occurrence between artists and tags instead. For example, if "Coldplay" has lots of songs tagged as "britpop" or "soft rock", then we consider "Coldplay" can be labeled as a "britpop"/"soft rock" artist. 
 
-Moreover, we filtered artists with very small amount of tags and tags that are rarely used. This results in a reasonable -sized dataset for our final visualization. Our final dataset still contains 10,000 most popular artists and more than 400 tags, which is a lot to explore!
+Moreover, we filtered artists with very small amount of tags and removed tags that are rarely used. This results in a reasonable -sized dataset for our final visualization. Our final dataset still contains 10,000 most popular artists and more than 400 tags, which is a lot to explore!
 
 ### Noisiness of User-add Tags
 The tags from the Last.fm dataset are added by listeners, which are noisy and heterogeneous by nature. While some tags are about music genres, as we expected, there are other tags about geographic information or simply meaningless, for example: top 40, love at first listen, my favorites. These meaningless tags can hurt the quality of our artist-tag network a lot. For example, a meaningless tag such as "favorite" can lead from Justin Bieber to Marilyn Manson.
